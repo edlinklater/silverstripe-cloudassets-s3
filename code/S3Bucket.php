@@ -55,15 +55,10 @@ class S3Bucket extends CloudBucket
 
 		$uploader = UploadBuilder::newInstance()
 			->setClient($this->client)
-			->setSource($this->getRelativeLinkFor($f))
+			->setSource($f->getFullPath())
 			->setBucket($this->containerName)
-			->setKey($f->getFilename());
-
-		if (!empty($this->config[self::FORCE_DL])) {
-			$uploader->setOption('Content-Disposition', 'attachment; filename=' . ($f->hasMethod('getFriendlyName') ? $f->getFriendlyName() : $f->Name));
-		}
-
-		$uploader->build();
+			->setKey($this->getRelativeLinkFor($f))
+			->build();
 
 		try {
 			$uploader->upload();

@@ -1,28 +1,28 @@
 Cloud Assets Module
 ===================
-Rackspace CloudFiles Driver
+Amazon S3 CloudFiles Driver
 ---------------------------
 
 CloudAssets module allows you to host all or part of the assets folder on a cloud storage container (CDN).
 You can find more details about how it works here: <https://github.com/markguinn/silverstripe-cloudassets>
 
-This driver gives you the bucket type RackspaceBucket for connecting to CloudFiles.
+This driver gives you the bucket type S3Bucket for connecting to CloudFiles.
 
-This module can happily co-exist with other bucket driver modules (which don't exist at the time of this writing).
+This module can happily co-exist with other bucket driver modules.
 
 
 Requirements
 ------------
 - Silverstripe 3.1+
 - Cloud Assets module
-- Rackspace php-opencloud
+- AWS PHP SDK
 
-Best way to install by far is `composer require markguinn/silverstripe-cloudassets-rackspace`.
+Best way to install by far is `composer require edlinklater/silverstripe-cloudassets-s3`.
 
 
 Example
 -------
-Assuming you have a CloudFiles container called site-uploads:
+Assuming you have an S3 bucket called site-uploads:
 
 *mysite/_config/cloudassets.yml:*
 ```
@@ -32,33 +32,28 @@ name: assetsconfig
 CloudAssets:
   map:
     'assets/Uploads':
-      Type: RackspaceBucket
+      Type: S3Bucket
       BaseURL: 'http://yourcdnbaseurl.com/'
       Container: site-uploads
-      Region: ORD
-      Username: yourlogin
+      Region: ap-southeast-2
       ApiKey: yourkey
-      LocalCopy: false
-      ServiceNet: false         # use the rackspace servicenet
-      ForceDownlad: false       # add Content-disposition headers to uplaoded files
+      ApiSecret: yoursecret
+      LocalCopy: true           # Doesn't work without LocalCopy at present
 ```
 
 
 Developer(s)
 ------------
-- Mark Guinn <mark@adaircreative.com>
+- Ed Linklater <ss@ed.geek.nz>
+- derived from markguinn\silverstripe-cloudassets-rackspace by Mark Guinn <mark@adaircreative.com>
 
 Contributions welcome by pull request and/or bug report.
 Please follow Silverstripe code standards (tests would be nice).
 
-I would love for someone to implement some other drivers - S3, Swift, Google, etc.
-It's very easy to implement drivers - just extend CloudBucket and implement a few
-methods.
-
 
 License (MIT)
 -------------
-Copyright (c) 2014 Mark Guinn
+Copyright (c) 2014 Mark Guinn, Ed Linklater
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
