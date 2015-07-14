@@ -13,7 +13,7 @@
 		"installer-name": "cloudassets-s3"
 	},
 	"require": {
-		"silverstripe/framework": ">=3.1",
+		"silverstripe/framework": ">=3.0",
 		"markguinn/silverstripe-cloudassets": "*",
 		"aws/aws-sdk-php": "2.*"
 	}
