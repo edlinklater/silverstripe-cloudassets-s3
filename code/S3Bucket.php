@@ -74,7 +74,7 @@ class S3Bucket extends CloudBucket
 	public function delete($f) {
 		$this->client->deleteObject(array(
 			'Bucket'     => $this->containerName,
-			'Key'        => $f->getFilename(),
+			'Key'        => $this->getRelativeLinkFor($f),
 		));
 	}
 
@@ -85,14 +85,19 @@ class S3Bucket extends CloudBucket
 	 */
 	public function rename(File $f, $beforeName, $afterName) {
 		$obj = $this->getFileObjectFor($f);
+		// Convert before and after Filename attributes into keys
+		$beforeObj = new DataObject();
+		$beforeObj->Filename = $beforeName;
+		$afterObj = new DataObject();
+		$afterObj->Filename = $afterName;
 		$result = $this->client->copyObject(array(
 			'Bucket'     => $this->containerName,
 			'CopySource' => urlencode($this->containerName . '/' . $beforeName),
-			'Key'        => $afterName,
+			'Key'        => $this->getRelativeLinkFor($afterObj),
 		));
 		if($result) $this->client->deleteObject(array(
 			'Bucket'     => $this->containerName,
-			'Key'        => $beforeName,
+			'Key'        => $this->getRelativeLinkFor($beforeObj),
 		));
 	}
 
@@ -117,7 +122,7 @@ class S3Bucket extends CloudBucket
 	 * @return string
 	 */
 	public function getTemporaryLinkFor($f, $expires=3600) {
-		$obj = $this->getFileObjectFor($this->getRelativeLinkFor($f));
+		$obj = $this->getFileObjectFor($f);
 		return $obj['Body']->getUri();
 	}
 
@@ -129,7 +134,7 @@ class S3Bucket extends CloudBucket
 	public function checkExists($f) {
 		return $this->client->doesObjectExist(array(
 			'Bucket' => $this->containerName,
-			'Key'    => $f->getFilename()
+			'Key'    => $this->getRelativeLinkFor($f)
 		));
 	}
 
@@ -155,7 +160,7 @@ class S3Bucket extends CloudBucket
 		try {
 			$result = $this->client->getObject(array(
 				'Bucket' => $this->containerName,
-				'Key'    => $f->getFilename()
+				'Key'    => $this->getRelativeLinkFor($f)
 			));
 			return $result;
 		} catch (\Aws\S3\Exception\NoSuchKeyException $e) {
