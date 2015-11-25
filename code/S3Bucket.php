@@ -126,11 +126,11 @@ class S3Bucket extends CloudBucket
 	 * @param $f - File object or filename
 	 * @return bool
 	 */
-	public function checkExists($f) {
-		return $this->client->doesObjectExist(array(
-			'Bucket' => $this->containerName,
-			'Key'    => $f->getFilename()
-		));
+	public function checkExists(File $f) {
+		return $this->client->doesObjectExist(
+			$this->containerName,
+			$f->getFilename()
+		);
 	}
 
 
@@ -138,7 +138,7 @@ class S3Bucket extends CloudBucket
 	 * @param $f - File object or filename
 	 * @return int - if file doesn't exist, returns -1
 	 */
-	public function getFileSize($f) {
+	public function getFileSize(File $f) {
 		if($obj = $this->getFileObjectFor($f)) {
 			return $obj['ContentLength'];
 		} else {
@@ -151,7 +151,7 @@ class S3Bucket extends CloudBucket
 	 * @param File|string $f
 	 * @return \Guzzle\Http\EntityBody
 	 */
-	protected function getFileObjectFor($f) {
+	protected function getFileObjectFor(File $f) {
 		try {
 			$result = $this->client->getObject(array(
 				'Bucket' => $this->containerName,
