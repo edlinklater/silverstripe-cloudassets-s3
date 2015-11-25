@@ -74,7 +74,7 @@ class S3Bucket extends CloudBucket
 	public function delete($f) {
 		$this->client->deleteObject(array(
 			'Bucket'     => $this->containerName,
-			'Key'        => $f->getFilename(),
+			'Key'        => $this->getRelativeLinkFor($f),
 		));
 	}
 
@@ -84,15 +84,15 @@ class S3Bucket extends CloudBucket
 	 * @param string $afterName - contents of the Filename property (i.e. relative to site root)
 	 */
 	public function rename(File $f, $beforeName, $afterName) {
-		$obj = $this->getFileObjectFor($f);
+		$obj = $this->getFileObjectFor($beforeName);
 		$result = $this->client->copyObject(array(
 			'Bucket'     => $this->containerName,
-			'CopySource' => urlencode($this->containerName . '/' . $beforeName),
-			'Key'        => $afterName,
+			'CopySource' => urlencode($this->containerName . '/' . $this->getRelativeLinkFor($beforeName)),
+			'Key'        => $this->getRelativeLinkFor($afterName),
 		));
 		if($result) $this->client->deleteObject(array(
 			'Bucket'     => $this->containerName,
-			'Key'        => $beforeName,
+			'Key'        => $this->getRelativeLinkFor($beforeName),
 		));
 	}
 
@@ -129,7 +129,7 @@ class S3Bucket extends CloudBucket
 	public function checkExists(File $f) {
 		return $this->client->doesObjectExist(
 			$this->containerName,
-			$f->getFilename()
+			$this->getRelativeLinkFor($f)
 		);
 	}
 
@@ -155,7 +155,7 @@ class S3Bucket extends CloudBucket
 		try {
 			$result = $this->client->getObject(array(
 				'Bucket' => $this->containerName,
-				'Key'    => $f->getFilename()
+				'Key'    => $this->getRelativeLinkFor($f)
 			));
 			return $result;
 		} catch (\Aws\S3\Exception\NoSuchKeyException $e) {
