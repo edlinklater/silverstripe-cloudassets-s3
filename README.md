@@ -3,6 +3,8 @@ Cloud Assets Module
 Amazon S3 CloudFiles Driver
 ---------------------------
 
+**This module is not actively maintained and may not function as expected.**
+
 CloudAssets module allows you to host all or part of the assets folder on a cloud storage container (CDN).
 You can find more details about how it works here: <https://github.com/markguinn/silverstripe-cloudassets>
 
