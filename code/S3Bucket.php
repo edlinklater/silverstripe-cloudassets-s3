@@ -57,8 +57,13 @@ class S3Bucket extends CloudBucket
 			->setClient($this->client)
 			->setSource($f->getFullPath())
 			->setBucket($this->containerName)
-			->setKey($this->getRelativeLinkFor($f))
-			->build();
+			->setKey($this->getRelativeLinkFor($f));
+
+		if (Config::inst()->forClass('S3Bucket')->write_public) {
+			$uploader->setOption('ACL', 'public-read');
+		}
+
+		$uploader->build();
 
 		try {
 			$uploader->upload();
