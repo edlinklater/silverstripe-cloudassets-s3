@@ -41,6 +41,9 @@ CloudAssets:
       ApiKey: yourkey
       ApiSecret: yoursecret
       LocalCopy: true           # Doesn't work without LocalCopy at present
+      
+S3Bucket:
+  write_public: false # Set to true if you wish to allow public read only access for uploaded files
 ```
 
 
